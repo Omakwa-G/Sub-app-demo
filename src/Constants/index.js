@@ -7,7 +7,35 @@ import logo3 from '../assets/logo3.svg';
 import logo4 from '../assets/logo4.svg';
 import logo5 from '../assets/logo5.svg';
 
-
+export const footer = [
+  {
+      name: "Company",
+      links: [
+          "Home",
+          "Examples",
+          "Pricing",
+          'Updates',
+      ]
+  },
+  {
+      name: "Resources",
+      links: [
+          "Home",
+          "Examples",
+          "Pricing",
+          'Updates',
+      ]
+  },
+  {
+      name: "About",
+      links: [
+          "Home",
+          "Examples",
+          "Pricing",
+          'Updates',
+      ]
+  }
+]
 
 
 export const navlinks =[
@@ -95,7 +123,7 @@ const plans = [
   },
   {
     title: "Premium",
-    price: "$29/month",
+    price: "5,000/M",
     specs: [
       "10 Website",
       "15 GB Hosting",
@@ -105,7 +133,7 @@ const plans = [
   },
   {
     title: "Enterprise",
-    price: "$49/month",
+    price: "9,000/M",
     specs: [
       "Unlimited Website",
       "50 GB Hosting",

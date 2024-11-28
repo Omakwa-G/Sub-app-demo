@@ -5,20 +5,21 @@ import {FaRegUser} from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
 import login from '../assets/login.png';
-import { auth } from '../Firebase/Firebase-config';
+import { auth, db } from '../Firebase/Firebase-config';
 import LoadSpinner from '../Utils/LoadSpinner';
-
+import GoogleAuth from '../Components/GoogleAuth';
+import { addDoc, collection } from "firebase/firestore";
 
 const initialState = {
   username: '',
   email: '',
   password: '',
-  confirmPassword: '',  
+  confirmPassword: '',
 };
 
-
 const CreateAccount = ({setisAuth}) => {
-
+//creating a collection in our database
+const postCollectionRef = collection(db, "Posts");
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState(initialState);
@@ -89,16 +90,21 @@ const CreateAccount = ({setisAuth}) => {
              await updateProfile(user, {displayName: `${username}`})
              setLoading(false);
              toast.success('signup successfully');
-             localStorage.setItem('LoggedIn_invoice', true);
+             localStorage.setItem('Database', true);
              setisAuth(true);
-             navigate('/invoice')
+             navigate('/database')
              setLoading(false);
             }  
+            await addDoc(postCollectionRef, {
+              ...formData,
+              author: {name: auth.currentUser.displayName, id: auth.currentUser.uid } 
+            })
            } catch (error) {
              toast.error('user already exit')
              console.error(error)
              setLoading(false);
            }
+           
       }
       };
   
@@ -175,7 +181,7 @@ const CreateAccount = ({setisAuth}) => {
             </div>
 
             <div className='md:my-4'>
-              <label>Confi Password</label>
+              <label>Confirm Password</label>
               <div className='my-2 w-full relative '>
                 <input
                   
@@ -202,9 +208,7 @@ const CreateAccount = ({setisAuth}) => {
         
         <hr className="my-6 border-gray-300 w-full" />
      
-
-
-
+        <GoogleAuth setisAuth={setisAuth}/>
         <p className='my-4'>Already have an account? <Link className='text-[#5454D4] underline' to={'/signin'}>sign in</Link></p>
       </div>
     </div>

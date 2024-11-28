@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { auth } from '../Firebase/Firebase-config';
 import LoadSpinner from '../Utils/LoadSpinner';
 import signin from '../assets/signin.png';
+import GoogleAuth from '../Components/GoogleAuth';
 
 const initialState = {
   username: '',
@@ -162,9 +163,7 @@ const CreateAccount = ({setisAuth}) => {
 
         
         <hr className="my-6 border-gray-300 w-full" />
-     
-
-
+        <GoogleAuth setisAuth={setisAuth}/>
         <p className='my-4'>Don't have an account? <Link className='text-[#5454D4] underline' to={'/createaccount'}>sign up</Link></p>
       </div>
     </div>

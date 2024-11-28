@@ -13,7 +13,7 @@ const GoogleAuth = ({setisAuth}) => {
     signInWithPopup(auth, provider).then((result) => {
       localStorage.setItem("LoggedIn_invoice", true);
       setisAuth(true)
-      navigate('/invoice')
+      navigate('/')
     })
 
   }
