@@ -63,7 +63,7 @@ const DatabaseForm = () => {
       {/* Hero Section */}
       <Box
         sx={{
-          background: 'url(https://via.placeholder.com/1500) center/cover no-repeat',
+          background: 'white',
           padding: '60px 0',
           color: '#fff',
           textAlign: 'center',
