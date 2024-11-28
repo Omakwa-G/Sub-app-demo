@@ -1,33 +1,42 @@
-import {FcGoogle} from 'react-icons/fc';
-import {  signInWithPopup } from 'firebase/auth';
+import React from 'react';
+import { auth, provider } from '../Firebase/Firebase-config'; // Adjust the import based on your configuration
+import { signInWithPopup } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import { auth, provider } from '../Firebase/Firebase-config';
+import { toast } from 'react-toastify';
 
-
-const GoogleAuth = ({setisAuth}) => {
-
+const GoogleAuth = ({ setisAuth, onSuccess }) => {
   const navigate = useNavigate();
 
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
 
-  const handleGoogleClick = () =>{
-    signInWithPopup(auth, provider).then((result) => {
-      localStorage.setItem("LoggedIn_invoice", true);
-      setisAuth(true)
-      navigate('/')
-    })
+      if (user) {
+        localStorage.setItem("isAuth", true); // Save auth status in localStorage
+        setisAuth(true);
+        toast.success("Logged in with Google successfully!");
 
-  }
-
-
+        if (onSuccess) {
+          onSuccess(); // Call the callback to navigate
+        } else {
+          navigate("/database"); // Default navigation if onSuccess is not provided
+        }
+      }
+    } catch (error) {
+      console.error("Google sign-in error:", error);
+      toast.error("Failed to sign in with Google.");
+    }
+  };
 
   return (
-    <button  onClick={handleGoogleClick} className="w-full block bg-white hover:bg-gray-100 focus:bg-gray-100 text-gray-900 font-semibold rounded-lg px-4 py-3 border border-gray-300">
-    <div className="flex items-center justify-center">
-    <FcGoogle className='w-7 h-7'/>
-        <span className="ml-4"> Log in with Google </span>
-    </div>
-</button>
-  )
-}
+    <button
+      onClick={handleGoogleSignIn}
+      className="w-full py-2 my-2 bg-blue-500 text-white rounded-lg font-semibold flex justify-center items-center"
+    >
+      Login with Google
+    </button>
+  );
+};
 
 export default GoogleAuth;

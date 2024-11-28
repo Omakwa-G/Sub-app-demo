@@ -12,7 +12,8 @@ import Signin from './Pages/Signin';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Footer from './Pages/Footer';
-
+import Database from "./Pages/Database";
+import Users from './Components/Users';
 
 const App = () => {
 
@@ -26,10 +27,13 @@ const App = () => {
       <Routes>
       <Route path='/' element={<Home setIsAuth={setIsAuth}/>} />
       <Route path='/features' element={<Features setIsAuth={setIsAuth}/>}/>
-      <Route path='/pricing' element={<Pricing setIsAuth={setIsAuth}/>}/>
+      <Route path='/pricing' element={<Pricing setIsAuth={isAuth}/>}/>
      <Route path='/subscription' element={<Subscription setIsAuth={setIsAuth}/>}/> 
      <Route path='/createaccount' element={<CreateAccount isAuth={isAuth} />}/>
      <Route path='/signin' element={<Signin/>}/>
+     <Route path="/database" element={<Database />} />
+     <Route path="/users" element={<Users />} />
+
       </Routes>
       <Footer/>
 
