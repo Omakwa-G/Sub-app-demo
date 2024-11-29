@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Box, TextField, MenuItem, Select, InputLabel, FormControl, Button, Grid, Typography } from '@mui/material';
+import { Box, TextField, MenuItem, Select, InputLabel, FormControl, Button, Typography } from '@mui/material';
 import { motion } from 'framer-motion'; // Import motion from framer-motion
 import { useNavigate } from 'react-router-dom'; // To navigate to users.jsx after form submission
 
 const DatabaseForm = () => {
   const navigate = useNavigate();
-  
+
   // Define the state for form data
   const [formData, setFormData] = useState({
     name: '',
@@ -16,6 +16,7 @@ const DatabaseForm = () => {
     subscription: '',
     price: '',
   });
+  const postCollectionRef = collection(db, "Posts");
 
   // Define state for error messages
   const [errors, setErrors] = useState({});
@@ -50,9 +51,14 @@ const DatabaseForm = () => {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Validate the form data before submission
     if (validateForm()) {
+      // Save form data to localStorage or sessionStorage
+      let users = JSON.parse(localStorage.getItem('users')) || [];
+      users.push(formData); // Add new user to the list
+      localStorage.setItem('users', JSON.stringify(users)); // Save updated list
+
       // If validation passes, navigate to users page
       navigate('/users');
     }
@@ -76,7 +82,7 @@ const DatabaseForm = () => {
           transition={{ duration: 1 }}
         >
           <Typography variant="h2" sx={{ color: 'black', paddingTop: '10px' }}>
-           Join Us Today And Get Started
+            Join Us Today And Get Started
           </Typography>
           <Typography variant="h4" sx={{ color: 'black', paddingTop: '10px', font: 'bold' }}>
             Start Your Own Subscription Business
@@ -106,7 +112,6 @@ const DatabaseForm = () => {
           padding: '40px',
           borderRadius: '10px',
           boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-          
         }}
       >
         <TextField

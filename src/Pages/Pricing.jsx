@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // Import for navigation
 import { SectionWrapper } from "../hoc";
 import { plans } from "../Constants";
@@ -7,8 +7,8 @@ import AOS from "aos";
 import { motion, useAnimation } from "framer-motion";
 
 function Pricing() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // State for login status
   const navigate = useNavigate(); // Navigation hook
-  const isLoggedIn = localStorage.getItem("isAuth") === "true"; // Check auth status
 
   useEffect(() => {
     AOS.init({ duration: 1500 });
@@ -22,9 +22,9 @@ function Pricing() {
 
   const handleGetStarted = () => {
     if (isLoggedIn) {
-      navigate("/database"); // Navigate to Database if logged in
+      navigate("/database"); // Navigate to Database page if logged in
     } else {
-      alert("Please log in first.");
+      alert("Please log in first."); // Show alert if not logged in
     }
   };
 
