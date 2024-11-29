@@ -48,22 +48,26 @@ const DatabaseForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     // Validate the form data before submission
     if (validateForm()) {
-      // Save form data to localStorage or sessionStorage
-      let users = JSON.parse(localStorage.getItem('users')) || [];
-      users.push(formData); // Add new user to the list
-      localStorage.setItem('users', JSON.stringify(users)); // Save updated list
-
-      // If validation passes, navigate to users page
-      navigate('/users');
+      try {
+        // Save form data to Firebase
+        await addDoc(postCollectionRef, {
+          ...formData,
+          author: { name: auth.currentUser.displayName, id: auth.currentUser.uid },
+        });
+  
+        // If validation and Firebase operation pass, navigate to the users page
+        navigate('/users');
+      } catch (error) {
+        console.log(error.message);
+      }
     }
-  };
-
+  };  
+  
   return (
     <Box sx={{ padding: '20px' }}>
       {/* Hero Section */}
