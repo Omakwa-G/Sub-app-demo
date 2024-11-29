@@ -17,7 +17,7 @@ const initialState = {
   confirmPassword: '',
 };
 
-const CreateAccount = ({ setisAuth }) => {
+const CreateAccount = ({ setisAuth, GoogleSignOut }) => {
   const postCollectionRef = collection(db, "Posts");
   const navigate = useNavigate();
 
@@ -88,12 +88,15 @@ const CreateAccount = ({ setisAuth }) => {
 
   return (
     <div className="contact-container">
+
       <img src={login} alt="Login" className="contact-image" />
+      
       <div className="login flex items-center justify-center min-h-screen">
         {loading && <LoadSpinner />}
         <div className="shadow-lg rounded-lg p-8 max-w-[800px] w-full">
           <div className="dark:bg-[#e8edea] px-10 py-8 rounded-lg text-black">
-            <h1 className="text-2xl font-bold text-[#FF7143]">Register with logoipsum</h1>
+            <h1 className="text-2xl font-bold text-[#FF7143]">Register with logoipsum OR</h1>
+            <h1 className="text-2xl font-bold text-red-500" onClick={{GoogleSignOut}} style={{cursor: 'pointer'}}>SignOut</h1> 
             <form onSubmit={handleSubmit}>
               {/* Form Fields */}
               <div className="grid md:grid-cols-2 md:gap-8">

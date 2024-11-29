@@ -75,8 +75,11 @@ const DatabaseForm = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         >
-          <Typography variant="h3" sx={{ color: 'black', paddingTop: '10px' }}>
-            Join Us Today and Get Started
+          <Typography variant="h2" sx={{ color: 'black', paddingTop: '10px' }}>
+           Join Us Today And Get Started
+          </Typography>
+          <Typography variant="h4" sx={{ color: 'black', paddingTop: '10px', font: 'bold' }}>
+            Start Your Own Subscription Business
           </Typography>
         </motion.div>
 
@@ -85,7 +88,7 @@ const DatabaseForm = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
         >
-          <Typography variant="h5" sx={{ marginTop: '20px', color: 'black' }}>
+          <Typography variant="h5" sx={{ marginTop: '18px', color: 'black' }}>
             Fill out the form below to subscribe to one of our plans.
           </Typography>
         </motion.div>
