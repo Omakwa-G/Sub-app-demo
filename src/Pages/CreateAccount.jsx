@@ -95,8 +95,7 @@ const CreateAccount = ({ setisAuth, GoogleSignOut }) => {
         {loading && <LoadSpinner />}
         <div className="shadow-lg rounded-lg p-8 max-w-[800px] w-full">
           <div className="dark:bg-[#e8edea] px-10 py-8 rounded-lg text-black">
-            <h1 className="text-2xl font-bold text-[#FF7143]">Register with logoipsum OR</h1>
-            <h1 className="text-2xl font-bold text-red-500" onClick={{GoogleSignOut}} style={{cursor: 'pointer'}}>SignOut</h1> 
+            <h1 className="text-2xl font-bold text-[#FF7143]">Register with logoipsum</h1>
             <form onSubmit={handleSubmit}>
               {/* Form Fields */}
               <div className="grid md:grid-cols-2 md:gap-8">
@@ -183,12 +182,12 @@ const CreateAccount = ({ setisAuth, GoogleSignOut }) => {
                 </div>
               </div>
               {/* Submit Button */}
-              <button
+              <Link to={'/signin'}><button
                 type="submit"
                 className="w-[120px] my-4 md:my-2 p-3 bg-[#5454D4] text-white rounded-lg font-semibold align-center"
               >
                 Register
-              </button>
+              </button></Link>
             </form>
             <hr className="my-6 border-gray-300 w-full" />
             {/* GoogleAuth */}

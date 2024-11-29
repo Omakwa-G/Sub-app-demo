@@ -1,41 +1,34 @@
 import React from 'react';
-import { auth, provider } from '../Firebase/Firebase-config'; // Adjust the import based on your configuration
+import { Button } from '@mui/material';
+import { auth, provider } from '../Firebase/Firebase-config'; // Ensure correct Firebase configuration is imported
 import { signInWithPopup } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 
-const GoogleAuth = ({ setisAuth, onSuccess }) => {
+const GoogleAuth = () => {
   const navigate = useNavigate();
 
-  const handleGoogleSignIn = async () => {
+  const handleGoogleLogin = async () => {
     try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-
-      if (user) {
-        localStorage.setItem("isAuth", true); // Save auth status in localStorage
-        setisAuth(true);
-        toast.success("Logged in with Google successfully!");
-
-        if (onSuccess) {
-          onSuccess(); // Call the callback to navigate
-        } else {
-          navigate("/database"); // Default navigation if onSuccess is not provided
-        }
-      }
+      await signInWithPopup(auth, provider); // Log in using Google
+      navigate('/database'); // Redirect to the database page
     } catch (error) {
-      console.error("Google sign-in error:", error);
-      toast.error("Failed to sign in with Google.");
+      console.error('Google login failed:', error.message);
     }
   };
 
   return (
-    <button
-      onClick={handleGoogleSignIn}
-      className="w-full block bg-white hover:bg-gray-100 focus:bg-gray-100 text-gray-900 font-semibold rounded-lg px-4 py-3 border border-gray-300"
+    <Button
+      variant="contained"
+      color="primary"
+      onClick={handleGoogleLogin}
+      sx={{
+        backgroundColor: '#DB4437',
+        color: '#fff',
+        '&:hover': { backgroundColor: '#c53629' },
+      }}
     >
       Login with Google
-    </button>
+    </Button>
   );
 };
 

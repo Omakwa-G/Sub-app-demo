@@ -9,21 +9,31 @@ import Pricing from './Pages/Pricing';
 import Subscription from './Pages/Subscription';
 import CreateAccount from './Pages/CreateAccount';
 import Signin from './Pages/Signin';
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Footer from './Pages/Footer';
 import Database from "./Pages/Database";
 import Users from './Components/Users';
+import { signOut } from "firebase/auth";
+import { auth } from "./Firebase/Firebase-config";
 
 const App = () => {
 
   const [isAuth, setIsAuth] = useState(localStorage.getItem('is-Auth'));
 
+  //signOut functionality...
+  const GoogleSignOut =()=>{
+    signOut(auth).then(() => {
+      localStorage.clear();
+      setIsAuth(false);
+      window.location.pathname = '/signin';
+    })
+  };
+
+
   return (
-    <div>
-      <Navbar/>
-
-
+      
+<>
+<Navbar GoogleSignOut={GoogleSignOut} isAuth={isAuth}/>
       <Routes>
       <Route path='/' element={<Home setIsAuth={setIsAuth}/>} />
       <Route path='/features' element={<Features setIsAuth={setIsAuth}/>}/>
@@ -38,7 +48,7 @@ const App = () => {
       <Footer/>
 
 
-    </div>
+   </>
   )
 }
 

@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AiFillEyeInvisible, AiFillEye, AiOutlineMail } from 'react-icons/ai';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile, signOut, onAuthStateChanged } from 'firebase/auth';
 import { FaRegUser } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
@@ -17,22 +17,38 @@ const initialState = {
   confirmPassword: '',
 };
 
-const CreateAccount = ({ setisAuth, GoogleSignOut }) => {
+const CreateAccount = ({ setisAuth }) => {
   const postCollectionRef = collection(db, "Posts");
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState(initialState);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [passwordEye, setPasswordEye] = useState(false);
+  const [confirmPasswordEye, setConfirmPasswordEye] = useState(false);
+  const [user, setUser] = useState(null);
 
   const { username, email, password, confirmPassword } = formData;
 
-  const [passwordEye, setPasswordEye] = useState(false);
+  // Toggle Password Visibility
   const handlePasswordEye = () => setPasswordEye(!passwordEye);
-
-  const [confirmPasswordEye, setConfirmPasswordEye] = useState(false);
   const handleConfirmPasswordEye = () => setConfirmPasswordEye(!confirmPasswordEye);
 
+  // Monitor Authentication State
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        console.log("User is logged in:", currentUser);
+      } else {
+        setUser(null);
+        console.log("No user is logged in");
+      }
+    });
+    return unsubscribe; // Cleanup subscription
+  }, []);
+
+  // Validate Form
   const validateForm = () => {
     let newErrors = {};
 
@@ -57,25 +73,25 @@ const CreateAccount = ({ setisAuth, GoogleSignOut }) => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // Handle Form Submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (validateForm()) {
       try {
         setLoading(true);
-        if (username && email && password) {
-          const { user } = await createUserWithEmailAndPassword(auth, email, password);
-          await updateProfile(user, { displayName: username });
-          setLoading(false);
-          toast.success("Signup successfully");
-          localStorage.setItem("isAuth", true);
-          setisAuth(true);
-          navigate("/database"); // Redirect to database page
-        }
+        const { user } = await createUserWithEmailAndPassword(auth, email, password);
+        await updateProfile(user, { displayName: username });
         await addDoc(postCollectionRef, {
           ...formData,
-          author: { name: auth.currentUser.displayName, id: auth.currentUser.uid },
+          author: { name: user.displayName, id: user.uid },
         });
+
+        setLoading(false);
+        toast.success("Signup successfully");
+        localStorage.setItem("isAuth", true);
+        setisAuth(true);
+        navigate("/database");
       } catch (error) {
         toast.error("User already exists");
         console.error(error);
@@ -84,7 +100,30 @@ const CreateAccount = ({ setisAuth, GoogleSignOut }) => {
     }
   };
 
+  // Handle Form Changes
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value.trim() });
+
+  // Google Sign-Out Functionality
+  const GoogleSignOut = async () => {
+    try {
+      console.log("Attempting to sign out...");
+      if (!auth.currentUser) {
+        toast.error("No user is logged in");
+        return;
+      }
+
+      await signOut(auth); // Sign out using Firebase
+      console.log("User signed out successfully.");
+
+      setisAuth(false);    // Update app state
+      localStorage.removeItem("isAuth"); // Clear local storage
+      toast.success("Successfully signed out");
+      navigate("/login");  // Redirect to login page
+    } catch (error) {
+      console.error("Sign out error:", error);
+      toast.error("Error signing out");
+    }
+  };
 
   return (
     <div className="contact-container">
@@ -93,9 +132,10 @@ const CreateAccount = ({ setisAuth, GoogleSignOut }) => {
         {loading && <LoadSpinner />}
         <div className="shadow-lg rounded-lg p-8 max-w-[800px] w-full">
           <div className="dark:bg-[#e8edea] px-10 py-8 rounded-lg text-black">
-            <h1 className="text-2xl font-bold text-[#FF7143]">Sign in  with logoipsum or </h1>    
-            <h1 className="text-2xl font-bold text-red-500" onClick={{GoogleSignOut}} style={{cursor: 'pointer'}}>SignOut</h1>    
-         
+            <h1 className="text-2xl font-bold text-[#FF7143]">
+              Sign in with logoipsum 
+            </h1>
+
             <form onSubmit={handleSubmit}>
               {/* Form Fields */}
               <div className="grid md:grid-cols-2 md:gap-8">
@@ -118,7 +158,6 @@ const CreateAccount = ({ setisAuth, GoogleSignOut }) => {
               </div>
               {/* Password Fields */}
               <div className="grid md:grid-cols-2 md:gap-8">
-                {/* Password */}
                 <div className="md:my-4">
                   <label>Password</label>
                   <div className="my-2 w-full relative">
@@ -140,25 +179,18 @@ const CreateAccount = ({ setisAuth, GoogleSignOut }) => {
                     {errors.password && <span className="text-[red]">{errors.password}</span>}
                   </div>
                 </div>
-                {/* Confirm Password */}
               </div>
               {/* Submit Button */}
-              <button
+             <Link to={'/database'}><button
                 type="submit"
                 className="w-[120px] my-4 md:my-2 p-3 bg-[#5454D4] text-white rounded-lg font-semibold align-center"
               >
                 Register
               </button>
+              </Link> 
             </form>
             <hr className="my-6 border-gray-300 w-full" />
-            {/* GoogleAuth */}
             <GoogleAuth setisAuth={setisAuth} onSuccess={() => navigate("/database")} />
-            <p className="my-4">
-              Don't have an account?{" "}
-              <Link className="text-[#5454D4] underline" to={"/createaccount"}>
-                Sign Up
-              </Link>
-            </p>
           </div>
         </div>
       </div>
